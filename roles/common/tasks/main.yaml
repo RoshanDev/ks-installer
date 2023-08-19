@@ -9,6 +9,10 @@
   register: masters
   failed_when: false
 
+  #Roshan:Debug
+- name: Roshan:Debug KubeSphere | Getting Kubernetes master num
+  debug:
+    msg: kubectl get node | awk '{if(NR>1){print $3}}' | grep master | wc -l, Current Kubernetes master num is {{ masters.stdout }}
 
 - name: KubeSphere | Setting master num
   set_fact:
@@ -37,6 +41,11 @@
         dest: "{{ kubesphere_dir }}/"
       loop:
         - "snapshot-controller"
+
+      #Roshan:Debug
+    - name: Roshan:Debug KubeSphere | Deploying snapshot controller
+      debug:
+        msg: copy snapshot-controller files from snapshot-controller to {{ kubesphere_dir }}/
 
     - name: KubeSphere | Creating snapshot controller values
       template:
@@ -74,9 +83,9 @@
 
 - include_tasks: pv-migration.yaml
   loop:
-    - {op: "openpitrix-db", ks: "mysql-pvc"}
-    - {op: "openpitrix-etcd", ks: "etcd-pvc"}
-#    - {openpitrix: "openpitrix-minio", ks: "minio-pvc"}
+    - { op: "openpitrix-db", ks: "mysql-pvc" }
+    - { op: "openpitrix-etcd", ks: "etcd-pvc" }
+  #    - {openpitrix: "openpitrix-minio", ks: "minio-pvc"}
   when:
     - openpitrix_component_pod.stdout.find("openpitrix-db-deployment") != -1
 
@@ -130,8 +139,8 @@
     src: "{{ item.file }}.j2"
     dest: "{{ kubesphere_dir }}/common/{{ item.file }}"
   with_items:
-#    - { path: etcd, file: etcd.yaml }
-#    - { name: mysql, file: mysql.yaml }
+    #    - { path: etcd, file: etcd.yaml }
+    #    - { name: mysql, file: mysql.yaml }
     - { path: redis, file: redis.yaml }
 
 

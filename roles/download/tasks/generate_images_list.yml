@@ -15,7 +15,7 @@
       {% endfor %}
       ]
 
-- name: Generating images list
+- name: Generating images list Roshan Debug
   template:
     src: "{{ item.file }}.j2"
     dest: "{{ item.file }}"

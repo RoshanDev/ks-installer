@@ -13,16 +13,27 @@
         dest: "{{ kubesphere_dir }}/{{ item.path }}/{{ item.file }}"
       with_items:
         - { path: openpitrix, file: ks-openpitrix-upgrade.yaml }
-
+      #Roshan:Debug
+      debug:
+        msg:
+          - Roshan:Debug Creating openpitrix jobs manifests, file is {{ kubesphere_dir }}/{{ item.path }}/{{ item.file }}
     - name: OpenPitrix | Upgrade OpenPitrix
       shell: >
         {{ bin_dir }}/kubectl apply -f {{ kubesphere_dir }}/openpitrix/ks-openpitrix-upgrade.yaml
       register: job
       failed_when: "job.stderr and 'Warning' not in job.stderr"
+      #Roshan:Debug
+      debug:
+        msg:
+          - Roshan:Debug execute 'kubectl apply -f {{ kubesphere_dir }}/openpitrix/ks-openpitrix-upgrade.yaml' to upgrade openpitrix and register job status, value is {{ job.stdout }}
 
     - name: OpenPitrix | Delete namespace openpitrix-system
       shell: >
         {{ bin_dir }}/kubectl delete  namespace openpitrix-system --force --grace-period=0
+      #Roshan:Debug
+      debug:
+        msg:
+          - Roshan:Debug execute 'kubectl delete  namespace openpitrix-system --force --grace-period=0' to delete namespace openpitrix-system
 
   when:
     -  OPMigrate is defined and OPMigrate
@@ -34,6 +45,11 @@
   shell: >
     {{ bin_dir }}/kubectl get deploy -n kubesphere-alerting-system 2>1 | grep "alerting" | wc -l
   register: alerting_check
+
+#Roshan:Debug
+- name: Roshan:Debug Alerting | Checking status v3.0.0
+  debug:
+    msg: execute 'kubectl get deploy -n kubesphere-alerting-system 2>1 | grep "alerting" | wc -l' to check alerting status, value is {{ alerting_check.stdout }}
 
 - block:
     - name: Alerting | Getting migration files

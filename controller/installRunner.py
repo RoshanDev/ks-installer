@@ -21,7 +21,15 @@ privateDataDir = '/kubesphere/results'
 configFile = '/kubesphere/config/ks-config.json'
 statusFile = '/kubesphere/config/ks-status.json'
 
-logging.basicConfig(level=logging.INFO, format="%(message)s")
+# Roshan-Debug: 丰富的日志信息，方便定位问题
+FORMAT = "[%(filename)s:%(lineno)s - %(funcName)20s() ] %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+# logging.basicConfig(level=logging.INFO, format="%(message)s")
+
+# 设置了不起作用啊
+# ANSIBLE_ROLES_PATH=/home/fanghui/developer/ks-installer/roles
+# rm -rf /etc/ansible/roles
+# sudo cp -r /home/fanghui/developer/ks-installer/roles/* /etc/ansible/roles
 
 ks_hook = '''
 {

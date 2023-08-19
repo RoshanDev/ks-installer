@@ -1,5 +1,5 @@
 ---
-- name: Generating images list
+- name: Roshan:Debug Generating images list
   include_tasks: "generate_images_list.yml"
   tags:
   - images_list
