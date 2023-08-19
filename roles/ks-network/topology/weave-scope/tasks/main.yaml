@@ -7,6 +7,10 @@
   loop:
     - weave-scope
 
+# Roshan:Debug
+- name: Roshan:Debug weave-scope | Getting weave-scope installation files
+  debug:
+    msg: copy weave-scope files from weave-scope to {{ kubesphere_dir }}/
 
 - name: weave-scope | Creating manifests
   template:
@@ -15,6 +19,10 @@
   with_items:
     - { type: ds, file: weave-scope.yaml }
 
+# Roshan:Debug
+- name: Roshan:Debug weave-scope | Creating manifests
+  debug:
+    msg: template weave-scope files from weave-scope weave-scope.yaml.j2 to {{ kubesphere_dir }}/weave-scope yaml files
 
 - name: weave-scope | Deploying weave-scope
   shell: >
@@ -24,6 +32,11 @@
   until: weave_result is succeeded
   retries: 5
   delay: 3
+
+# Roshan:Debug
+- name: Roshan:Debug weave-scope | Deploying weave-scope
+  debug:
+    msg: execute 'kubectl apply -f {{ kubesphere_dir }}/weave-scope/weave-scope.yaml' and register the output to weave_result, result is {{ weave_result.stdout }}
 
 - name: weave-scope | Importing weave-scope status
   shell: >
@@ -37,5 +50,7 @@
   retries: 5
   delay: 3
 
-
-
+# Roshan:Debug
+- name: Roshan:Debug weave-scope | Importing weave-scope status
+  debug:
+    msg: execute "kubectl patch cc ks-installer" and cc_result is succeeded
